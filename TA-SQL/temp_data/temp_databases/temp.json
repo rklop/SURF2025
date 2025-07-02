@@ -1,0 +1,19 @@
+[
+  {
+    "question_id": 30,
+    "db_id": "california_schools",
+    "question": "Which cities have the top 5 lowest enrollment number for students in grades 1 through 12?",
+    "evidence": "K-12 refers to students in grades 1 through 12.",
+    "SQL": "SELECT T2.CITY FROM FRPM AS T1 INNER JOIN SCHOOLS AS T2 ON T1.CDSCODE = T2.CDSCODE GROUP BY T2.CITY ORDER BY SUM(T1.ENROLLMENT_K12) ASC LIMIT 5",
+    "difficulty": "simple"
+  },
+  {
+    "question_id": 6,
+    "db_id": "california_schools",
+    "question": "Among the schools with the SAT test takers of over 500, please list the schools that are magnet schools or offer a magnet program.",
+    "evidence": "Magnet schools or offer a magnet program means that Magnet = 1",
+    "SQL": "SELECT T2.SCHOOL FROM SATSCORES AS T1 INNER JOIN SCHOOLS AS T2 ON T1.CDS = T2.CDSCODE WHERE T2.MAGNET = 1 AND T1.NUMTSTTAKR > 500",
+    "difficulty": "simple"
+  }
+ ]
+ 
