@@ -1,0 +1,11 @@
+{
+    "california_schools": [
+        [
+            {"primary": [{"value": "FRPM__CDSCODE"}]},
+            {"primary": [{"value": "SATSCORES__CDS"}]},
+            {"primary": [{"value": "SCHOOLS__CDSCODE"}]},
+            {"foreign": [{"value": "SATSCORES__CDS"}, {"value": "SCHOOLS__CDSCODE"}]},
+            {"foreign": [{"value": "FRPM__CDSCODE"}, {"value": "SCHOOLS__CDSCODE"}]}
+        ]
+    ]
+}

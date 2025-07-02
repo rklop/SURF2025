@@ -1,0 +1,4 @@
+{
+    "0": "SELECT ```sql SELECT   T1.City FROM schools AS T1 INNER JOIN satscores AS T2   ON T1.CDSCode = T2.cds ORDER BY   T2.enroll12 ASC LIMIT 5; ```\t----- bird -----\tcalifornia_schools",
+    "1": "SELECT ```sql SELECT   T1.School FROM schools AS T1 INNER JOIN satscores AS T2   ON T1.CDSCode = T2.cds WHERE   T2.NumTstTakr > 500 AND T1.Magnet = 1; ```\t----- bird -----\tcalifornia_schools"
+}
