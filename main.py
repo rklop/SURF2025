@@ -45,22 +45,19 @@ if __name__ == '__main__':
                 #print(f"I: {i}") 
                 gold_sql = data[i]['SQL']
                 gold_sql = gold_sql.upper()
-                #print(f"GOLD_SQL: {gold_sql}")
+                print(f"GOLD_SQL: {gold_sql}")
 
                 question_id = data[i]['question_id']
                 #print(f"QUESTION_ID: {question_id}")
                 database_id = data[i]['db_id']
                 #print(f"DATABASE_ID: {database_id}")
 
-                generated_sql = generated_sql[14:]
-                stopper = ';'
+                stopper = '\t'
                 generated_sql = generated_sql.split(stopper)[0]
                 generated_sql = ' '.join(generated_sql.split())
                 generated_sql = generated_sql.upper()
-                #print(f"GENERATED_SQL: {generated_sql}")
+                print(f"GENERATED_SQL: {generated_sql}")
 
-
-                
                 schema_path = './temp_data/temp_databases/table_definitions.json'
                 with open(schema_path, 'r') as f:
                     schema = json.load(f)
@@ -75,7 +72,7 @@ if __name__ == '__main__':
                 integrity_constraints = constraints[str(database_id)][0]
                 #print(f"INTEGRITY_CONSTRAINTS: {integrity_constraints}")
 
-                for bound_size in range(1, 6):
+                for bound_size in range(1, 3):
 
                     print(f"Testing with bound_size = {bound_size}")
 
@@ -105,7 +102,7 @@ if __name__ == '__main__':
                 traceback.print_exc()
 
                 # Write error row for all bound sizes
-                for bound_size in range(1, 11):
+                for bound_size in range(1, 3):
                     csv_row = {
                         'bound_size': bound_size,
                         'question_id': question_id if 'question_id' in locals() else question_idx,
