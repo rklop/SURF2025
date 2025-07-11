@@ -4,11 +4,14 @@ sys.path.append('/Users/rklop/text2sql model/TA-SQL/verieql/z3py_libs')
 
 from run import parser, main
 from verieql.verieql import verify_sql_equivalence
+from join_csv import join_csv_files
 import json
 import csv
 from src.modules import TASL, TALOG
 import tqdm
 import traceback
+import subprocess
+from join_csv import join_csv_files
 
 # I give it a .json path containing each question, a .json path containing the table definitions, and a .json path containing the constraints.
 # It will then run the TA-SQL modes on each question, and then verify the SQL equivalence of the generated SQL and the gold SQL.
@@ -17,15 +20,27 @@ import traceback
 if __name__ == '__main__':
     
     opt = parser()
-    output_dic = main(opt)
+    #output_dic = main(opt)
 
-    print(f"OUTPUT_DIC: {output_dic}")
+    output_dic = json.load(open('./outputs/temp_test.json'))
 
     csv_path = './outputs/verification_results.csv'
     csv_headers = ['bound_size', 'question_id', 'equivalent', 'counterexample', 'time_cost', 'generated_sql', 'gold_sql']
 
     print(f"Finished running TA-SQL" + "*"*100)
     
+    cmd = [
+        'python', 'evaluation/evaluation_ex.py',
+        '--predicted_sql_path', './outputs/temp_test.json',
+        '--ground_truth_path', './data/test_gold.sql',
+        '--db_root_path', './temp_data/temp_databases/',
+        '--diff_json_path', './data/mini_dev_sqlite.json',
+        '--output_log_path', './data/output.log',
+        '--sql_dialect', 'SQLite'
+    ]
+
+    result = subprocess.run(cmd, capture_output = True, text = True)
+
     with open(csv_path, 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=csv_headers)
         writer.writeheader()
@@ -45,22 +60,19 @@ if __name__ == '__main__':
                 #print(f"I: {i}") 
                 gold_sql = data[i]['SQL']
                 gold_sql = gold_sql.upper()
-                #print(f"GOLD_SQL: {gold_sql}")
+                print(f"GOLD_SQL: {gold_sql}")
 
                 question_id = data[i]['question_id']
                 #print(f"QUESTION_ID: {question_id}")
                 database_id = data[i]['db_id']
                 #print(f"DATABASE_ID: {database_id}")
 
-                generated_sql = generated_sql[14:]
-                stopper = ';'
+                stopper = '\t'
                 generated_sql = generated_sql.split(stopper)[0]
                 generated_sql = ' '.join(generated_sql.split())
                 generated_sql = generated_sql.upper()
-                #print(f"GENERATED_SQL: {generated_sql}")
+                print(f"GENERATED_SQL: {generated_sql}")
 
-
-                
                 schema_path = './temp_data/temp_databases/table_definitions.json'
                 with open(schema_path, 'r') as f:
                     schema = json.load(f)
@@ -75,14 +87,14 @@ if __name__ == '__main__':
                 integrity_constraints = constraints[str(database_id)][0]
                 #print(f"INTEGRITY_CONSTRAINTS: {integrity_constraints}")
 
-                for bound_size in range(1, 6):
+                for bound_size in range(1, 4):
 
-                    print(f"Testing with bound_size = {bound_size}")
+                    #print(f"Testing with bound_size = {bound_size}")
 
                     config = {'generate_code': True, 'timer': True, 'show_counterexample': True}
                     verification_result = verify_sql_equivalence(generated_sql, gold_sql, tables_definitions, bound_size, integrity_constraints, **config)
                 
-                    print(f"VERIFICATION_RESULT for bound_size {bound_size}: {verification_result}")
+                    #print(f"VERIFICATION_RESULT for bound_size {bound_size}: {verification_result}")
 
                     csv_row = {
                         'bound_size': bound_size,
@@ -100,12 +112,12 @@ if __name__ == '__main__':
                     print(f"Processed question {question_idx}: {question_id} with bound_size {bound_size}")
                 
             except Exception as e:
-                print(f"Error processing question {question_idx}: {type(e).__name__}: {str(e)}")
-                print(f"Full traceback:")
+                #print(f"Error processing question {question_idx}: {type(e).__name__}: {str(e)}")
+                #print(f"Full traceback:")
                 traceback.print_exc()
 
                 # Write error row for all bound sizes
-                for bound_size in range(1, 11):
+                for bound_size in range(1, 4):
                     csv_row = {
                         'bound_size': bound_size,
                         'question_id': question_id if 'question_id' in locals() else question_idx,
@@ -120,10 +132,9 @@ if __name__ == '__main__':
     
     print(f"all results saved to {csv_path}")
 
+    join_csv_files()
 
-
-
-
+    print("Done!")
 
 
 

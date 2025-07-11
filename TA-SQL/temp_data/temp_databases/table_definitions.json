@@ -29,7 +29,7 @@
                 "PERCENT_ELIGIBLE_FREE_AGES_5_17": "REAL",
                 "FRPM_COUNT_AGES_5_17": "REAL",
                 "PERCENT_ELIGIBLE_FRPM_AGES_5_17": "REAL",
-                "CALPADS_FALL1_CERTIFICATION_STATUS": "VARCHAR"
+                "CALPADS_FALL1_CERTIFICATION_STATUS": "INTEGER"
             },
             "SATSCORES": {
                 "CDS": "VARCHAR",
@@ -39,9 +39,9 @@
                 "CNAME": "VARCHAR",
                 "ENROLL12": "INTEGER",
                 "NUMTSTTAKR": "INTEGER",
-                "AVGSCRREAD": "REAL",
-                "AVGSCRMATH": "REAL",
-                "AVGSCRWRITE": "REAL",
+                "AVGSCRREAD": "INTEGER",
+                "AVGSCRMATH": "INTEGER",
+                "AVGSCRWRITE": "INTEGER",
                 "NUMGE1500": "INTEGER"
             },
             "SCHOOLS": {
